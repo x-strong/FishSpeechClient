@@ -34,53 +34,53 @@ jobs:
       - name: Lint with black and isort
         run: pdm run lint-check
 
-  build:
-    needs: lint
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        python-version: ["3.10"]
-        package-type: ["onefile", "onedir"]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - uses: pdm-project/setup-pdm@v3
-      - name: Install dependencies
-        run: |
-          if [ $RUNNER_OS == "Linux" ]; then
-            sudo apt-get update
-            sudo apt-get install -y \
-              ca-certificates \
-              libsox-dev \
-              build-essential \
-              cmake \
-              libasound-dev \
-              portaudio19-dev \
-              libportaudio2 \
-              libportaudiocpp0 \
-              ffmpeg
-          elif [ $RUNNER_OS == "macOS" ]; then
-            brew install \
-              ca-certificates \
-              sox \
-              cmake \
-              portaudio \
-              ffmpeg
-          fi
-          pdm sync
-      - name: Build pyinstaller package
-        env:
-          PACKAGE_TYPE: ${{ matrix.package-type }}
-        run: pdm run build.py
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: fish-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.package-type }}
-          path: dist
+  # build:
+  #   needs: lint
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [ubuntu-latest, macos-latest]
+  #       python-version: ["3.10"]
+  #       package-type: ["onefile", "onedir"]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     - uses: pdm-project/setup-pdm@v3
+  #     - name: Install dependencies
+  #       run: |
+  #         if [ $RUNNER_OS == "Linux" ]; then
+  #           sudo apt-get update
+  #           sudo apt-get install -y \
+  #             ca-certificates \
+  #             libsox-dev \
+  #             build-essential \
+  #             cmake \
+  #             libasound-dev \
+  #             portaudio19-dev \
+  #             libportaudio2 \
+  #             libportaudiocpp0 \
+  #             ffmpeg
+  #         elif [ $RUNNER_OS == "macOS" ]; then
+  #           brew install \
+  #             ca-certificates \
+  #             sox \
+  #             cmake \
+  #             portaudio \
+  #             ffmpeg
+  #         fi
+  #         pdm sync
+  #     - name: Build pyinstaller package
+  #       env:
+  #         PACKAGE_TYPE: ${{ matrix.package-type }}
+  #       run: pdm run build.py
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: fish-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.package-type }}
+  #         path: dist
 
   # publish:
   #   needs: lint
