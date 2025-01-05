@@ -35,6 +35,7 @@ conda create -n pyqt python=3.10
 conda activate pyqt
 pip install pdm
 pdm sync
+pip install -e .
 pdm run build.py
 ```
 

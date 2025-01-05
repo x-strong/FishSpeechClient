@@ -41,6 +41,31 @@ if platform.system() == "Windows":
         f"--windows-icon-from-ico={ICON_PATH}",
     ]
 
+elif platform.system() == "Linux":
+    args = [
+        "python",
+        "-m",
+        "nuitka",
+        # "--mingw64",
+        "--standalone",
+        f"--output-dir=dist",
+        "--follow-import-to=fish",
+        "main.py",
+        f"--onefile",  # default onefile is enough (not unzipping)
+        "--output-filename=fish",
+        "--include-data-dir=assets=assets",
+        "--include-data-dir=locales=locales",
+        "--include-data-files=fish_audio_preprocess=fish_audio_preprocess/=**/*.py",
+        "--windows-console-mode=disable",
+        "--enable-plugins=pkg-resources",
+        "--enable-plugins=pyqt6",
+        # --follow-import-to=numpy
+        "--nofollow-import-to=mkl,click,scipy,pandas,matplotlib,pytest",
+        "--include-qt-plugins=sensible,multimedia",
+        "--show-memory",
+        "--show-progress",
+    ]
+
 else:
     args = [
         "pyinstaller",

@@ -1,3 +1,5 @@
+import os
+import platform
 import signal
 import sys
 import time
@@ -19,6 +21,9 @@ class SplashScreen(QtWidgets.QSplashScreen):
 def main():
     t1 = time.time()
     qdarktheme.enable_hi_dpi()
+    if platform.system() == "Linux":
+        # 使用libx11.so桌面系统定位坐标
+        os.environ["QT_QPA_PLATFORM"] = "xcb"
     app = QtWidgets.QApplication(sys.argv)
     splash = SplashScreen()
     splash.show()
